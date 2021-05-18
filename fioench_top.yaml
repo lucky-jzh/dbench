@@ -1,0 +1,41 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: fio-pv-claim
+spec:
+  storageClassName: disecsi-nvme-rdma
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 500Gi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: fio-pod
+spec:
+  volumes:
+    - name: fio-pv-storage
+      persistentVolumeClaim:
+        claimName: fio-pv-claim
+  containers:
+    - name: fio-pv-container
+      image: 10.45.10.107:8099/k8s/fio-top:v1.0
+      imagePullPolicy: Always
+      env:
+       - name: DBENCH_MOUNTPOINT
+         value: /data
+          # - name: DBENCH_QUICK
+          #   value: "yes"
+          # - name: FIO_SIZE
+          #   value: 1G
+          # - name: FIO_OFFSET_INCREMENT
+          #   value: 256M
+          # - name: FIO_DIRECT
+          #   value: "0"
+       - name: FIO_BLOCK_SIZE
+         value: 8K
+      volumeMounts:
+        - mountPath: /data
+          name: fio-pv-storage

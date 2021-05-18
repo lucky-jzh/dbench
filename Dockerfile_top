@@ -1,8 +1,8 @@
 FROM dmonakhov/alpine-fio
 
-MAINTAINER Jack Jiang
+MAINTAINER Jack Jack<lee@logdna.com>
 
 VOLUME /tmp
 WORKDIR /tmp
 COPY ./docker-entrypoint.sh /
-CMD ["fio"]
+CMD ["top"]
